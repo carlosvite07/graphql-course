@@ -18,6 +18,23 @@ const resolvers = {
 
       return usuarioId;
     },
+    obtenerProductos: async () => {
+      try {
+        const productos = await Producto.find({});
+        return productos;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    obtenerProducto: async (_, { id }) => {
+      // revisar si el producto existe
+      const producto = await Producto.findById(id);
+      if (!producto) {
+        throw new Error("Producto no encontrado");
+      }
+
+      return producto;
+    },
   },
   Mutation: {
     nuevoUsuario: async (_, { input }) => {
@@ -77,6 +94,32 @@ const resolvers = {
       } catch (error) {
         console.log(error);
       }
+    },
+    actualizarProducto: async (_, { id, input }) => {
+      // revisar si el producto existe
+      let producto = await Producto.findById(id);
+      if (!producto) {
+        throw new Error("Producto no encontrado");
+      }
+
+      // guardarlo en la BD
+      producto = await Producto.findOneAndUpdate({ _id: id }, input, {
+        new: true,
+      });
+
+      return producto;
+    },
+    eliminarProducto: async (_, { id }) => {
+      // revisar si el producto existe
+      let producto = await Producto.findById(id);
+      if (!producto) {
+        throw new Error("Producto no encontrado");
+      }
+
+      // Eliminar
+      await Producto.findOneAndDelete({ _id: id });
+
+      return "Producto Eliminado";
     },
   },
 };
