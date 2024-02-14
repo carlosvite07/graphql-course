@@ -5,17 +5,15 @@ const {
 const typeDefs = require("./db/schema");
 const resolvers = require("./db/resolvers");
 
+const conectarDB = require("./config/db");
+
+//Conectar a la DB
+conectarDB();
+
 //server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => {
-    const usuarioId = 2031;
-
-    return {
-      usuarioId,
-    };
-  },
   plugins: [
     // deshabilitar el plugin de informes de uso
     ApolloServerPluginUsageReportingDisabled(),
